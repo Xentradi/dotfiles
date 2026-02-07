@@ -1,0 +1,23 @@
+# macOS
+.DS_Store
+
+# Shell history
+.zsh_history
+.zsh_history.*
+
+# Local overrides / secrets (if you create them later)
+*.local
+*.secret
+.env
+.env.*
+
+# SSH keys (do NOT commit)
+.ssh/id_*
+.ssh/*_key
+.ssh/known_hosts
+
+# Cache/logs
+**/*.log
+**/cache/
+**/.cache/
+
