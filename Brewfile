@@ -1,3 +1,4 @@
+tap "domt4/autoupdate"
 brew "bat"
 brew "btop"
 brew "deno"
