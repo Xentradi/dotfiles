@@ -1,0 +1,36 @@
+########################################
+# Catppuccin + Glass (Ghostty)
+########################################
+
+# Theme
+theme = catppuccin-mocha
+
+# Font (clean + readable)
+font-family = JetBrainsMono Nerd Font
+font-family-bold = JetBrainsMono Nerd Font
+font-family-italic = JetBrainsMono Nerd Font
+font-family-bold-italic = JetBrainsMono Nerd Font
+font-feature = liga=0
+
+# Small Air sweet spot
+font-size = 12.5
+
+# Cursor (soft Catppuccin contrast)
+cursor-color = #f5e0dc
+cursor-text = #11111b
+cursor-style = block
+
+# Scrollback
+scrollback-limit = 200000
+
+# Spacing (slightly tighter for small screens)
+window-padding-x = 8
+window-padding-y = 6
+
+# Glass
+background-opacity = 0.94
+
+# UX
+copy-on-select = true
+confirm-close-surface = false
+shell-integration = zsh

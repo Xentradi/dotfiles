@@ -1,0 +1,10 @@
+alias ls="eza --icons"
+alias ll="eza -lah --icons --git"
+alias la="eza -a --icons"
+alias tree="eza --tree --icons"
+
+alias zc='z -c'   # cd but restrict to subdirs
+alias zi='z -i'   # interactive directory picker
+
+alias rm='rm -i'          # confirm by default
+alias del='trash'         # safe delete to Trash
