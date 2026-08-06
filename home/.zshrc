@@ -1,7 +1,18 @@
 ########################################
 # PATH (Apple Silicon safe)
 ########################################
+export PATH="$HOME/Library/Python/3.9/bin:$HOME/.local/bin:$PATH"
 export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
+
+########################################
+# Runtime version managers
+########################################
+export NVM_DIR="$HOME/.nvm"
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && source "/opt/homebrew/opt/nvm/nvm.sh"
+
+if command -v pyenv >/dev/null 2>&1; then
+  eval "$(pyenv init - zsh)"
+fi
 
 ########################################
 # History (sane + powerful)
@@ -124,14 +135,10 @@ fi
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-########################################
-# tmux auto-attach (interactive, local only)
-########################################
-#if command -v tmux >/dev/null 2>&1; then
-#  if [[ -z "$TMUX" && -n "$PS1" ]]; then
-#    tmux attach -t main || tmux new -s main
-#  fi
-#fi
-alias t="tmux attach -t main || tmux new -s main"
+export PATH="/opt/homebrew/opt/postgresql@18/bin:$PATH"
 
-
+# Make remote shells boring + compatible (fixes nano/vim/htop on servers)
+# Keeps local Ghostty TERM untouched.
+function ssh() {
+  TERM=xterm-256color command ssh "$@"
+}

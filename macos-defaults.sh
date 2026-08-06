@@ -71,19 +71,6 @@ defaults write com.apple.dock autohide -bool true
 defaults write com.apple.dock mru-spaces -bool false
 
 ###############################################################################
-# Trackpad / Input
-###############################################################################
-
-# Tap to click
-defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
-defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
-defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
-
-# Three-finger drag (nice for laptop workflows)
-defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerDrag -bool true
-defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerDrag -bool true
-
-###############################################################################
 # Security / Safety
 ###############################################################################
 
@@ -100,4 +87,3 @@ killall Dock >/dev/null 2>&1 || true
 killall SystemUIServer >/dev/null 2>&1 || true
 
 echo "Done. Some changes may require logout/restart."
-

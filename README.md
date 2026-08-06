@@ -41,7 +41,7 @@ If a setup step cannot be recreated from this repo, it doesn’t belong.
 - Ghostty config
 
 ### CLI Tooling
-Installed via Brewfile (fzf, eza, bat, zoxide, tmux, etc.)
+Installed via Brewfile (fzf, eza, bat, zoxide, etc.)
 
 ---
 
@@ -193,10 +193,8 @@ Done.
 - Optional macOS defaults script
 - SSH config templating
 - Git config
-- tmux theming
 - per-machine overrides
 
 ---
 
 Built to eliminate setup friction.
-

@@ -27,8 +27,12 @@ scrollback-limit = 200000
 window-padding-x = 8
 window-padding-y = 6
 
+window-width = 80
+window-height = 20
+
+
 # Glass
-background-opacity = 0.94
+background-opacity = 0.84
 
 # UX
 copy-on-select = true

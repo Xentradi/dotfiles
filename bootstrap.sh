@@ -48,7 +48,6 @@ say "Using dotfiles at: $DOTFILES_DIR"
 link "$DOTFILES_DIR/home/.zshrc" "$HOME/.zshrc"
 link "$DOTFILES_DIR/home/.zsh_aliases" "$HOME/.zsh_aliases"
 link "$DOTFILES_DIR/home/.fzf.zsh" "$HOME/.fzf.zsh"
-link "$DOTFILES_DIR/home/.tmux.conf" "$HOME/.tmux.conf"
 
 # ~/.config
 link "$DOTFILES_DIR/config/starship.toml" "$HOME/.config/starship.toml"
@@ -63,4 +62,3 @@ fi
 say "Next:"
 say "  1) exec zsh"
 say "  2) brew bundle --file=$DOTFILES_DIR/Brewfile (after Homebrew is installed)"
-
