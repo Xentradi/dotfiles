@@ -1,200 +1,146 @@
 # Dotfiles
 
-Personal workstation configuration for macOS.
+Personal macOS workstation configuration. This repository is the source of truth for the terminal, shell, prompt, Ghostty, and the Homebrew-managed development environment.
 
-This repo exists for one reason:
+It is designed to rebuild the workstation safely on a new Mac without copying secrets or manually recreating configuration.
 
-👉 rebuild my terminal + shell environment in minutes on a new machine.
+## What it manages
 
-No snowflake laptops. No manual tweaking.
+- zsh behavior, history, completions, aliases, fzf, NVM, and pyenv
+- Starship prompt and Ghostty terminal configuration
+- Homebrew formulae, casks, and VS Code extensions in `Brewfile`
+- an optional, reviewed set of macOS UI defaults
 
----
+The bootstrap script creates these live symlinks:
 
-# Philosophy
+| Live path | Repository source |
+| --- | --- |
+| `~/.zshrc` | `home/.zshrc` |
+| `~/.zsh_aliases` | `home/.zsh_aliases` |
+| `~/.fzf.zsh` | `home/.fzf.zsh` |
+| `~/.config/starship.toml` | `config/starship.toml` |
+| `~/.config/ghostty/` | `config/ghostty/` |
 
-Keep it:
+Edit the repository files, not the symlinked paths in `$HOME`.
 
-- reproducible
-- minimal
-- fast
-- versioned
-- portable
+## Set up a new Mac
 
-If a setup step cannot be recreated from this repo, it doesn’t belong.
+### 1. Install the prerequisites
 
----
-
-# What's Managed
-
-### Shell
-- zsh
-- aliases
-- history behavior
-- completion
-- autosuggestions
-- syntax highlighting
-
-### Prompt
-- starship (Catppuccin themed)
-
-### Terminal
-- Ghostty config
-
-### CLI Tooling
-Installed via Brewfile (fzf, eza, bat, zoxide, etc.)
-
----
-
-# New Machine Setup (5–10 minutes)
-
-## 1. Install Homebrew
-
-Follow the official instructions:
-
-https://brew.sh
-
----
-
-## 2. Clone Dotfiles
+Install Apple’s Command Line Tools, then Homebrew:
 
 ```bash
-git clone <YOUR_REPO_URL> ~/dotfiles
+xcode-select --install
+# Follow https://brew.sh, then activate Homebrew for this shell:
+eval "$(/opt/homebrew/bin/brew shellenv)"
 ```
 
----
+### 2. Clone the repository
 
-## 3. Run Bootstrap
+HTTPS works before SSH keys are configured:
 
 ```bash
+git clone https://github.com/Xentradi/dotfiles.git ~/dotfiles
 cd ~/dotfiles
-./bootstrap.sh
-exec zsh
 ```
 
-This will:
+### 3. Restore applications and tools
 
-✅ create symlinks  
-✅ back up conflicting files  
-✅ configure `~/.config`  
-
-Backups are stored in:
-
-```
-~/.dotfiles_backup/
-```
-
----
-
-## 4. Install Packages
+Install the declared Homebrew formulae, casks, and VS Code extensions:
 
 ```bash
 brew bundle --file=~/dotfiles/Brewfile
 ```
 
-This restores the full CLI toolchain.
-
----
-
-# Updating the Brewfile
-
-After installing new core tools:
+### 4. Link the configuration
 
 ```bash
-brew bundle dump --file=~/dotfiles/Brewfile --force
+~/dotfiles/bootstrap.sh
+exec zsh
 ```
 
-Commit the change.
+`bootstrap.sh` moves any conflicting files into `~/.dotfiles_backup/<timestamp>/` before creating symlinks. It is safe to rerun, but will create another backup of the existing symlinks each time.
 
----
+### 5. Optional: apply macOS defaults
 
-# Repo Structure
+First read [`macos-defaults.sh`](macos-defaults.sh). If its choices match the new Mac, run:
 
+```bash
+~/dotfiles/macos-defaults.sh
 ```
+
+It changes Finder, Dock, screenshots, key repeat, save/print panels, scrollbars, and lock-screen behavior. It does not manage trackpad tap-to-click or three-finger drag. Screenshots are stored as PNGs in `~/Pictures/Screenshots`.
+
+### 6. Verify
+
+```bash
+command -v starship zoxide fzf nvm pyenv
+readlink ~/.zshrc
+readlink ~/.config/ghostty
+brew bundle check --file=~/dotfiles/Brewfile
+```
+
+The first two `readlink` commands should point into `~/dotfiles`.
+
+## Everyday use and maintenance
+
+After changing a managed file, open a new terminal or reload the relevant program:
+
+- zsh: `exec zsh`
+- Ghostty: reload its configuration or open a new window
+- Starship: open a new prompt
+
+Before making a configuration change, update the local checkout:
+
+```bash
+cd ~/dotfiles
+git pull --ff-only
+```
+
+Review and publish intentional changes:
+
+```bash
+git diff --check
+git status
+git add <files>
+git commit -m "Describe the workstation change"
+git push
+```
+
+When deliberately adding a Homebrew package, update the manifest rather than dumping the entire installed machine state:
+
+```bash
+brew bundle add <formula-or-cask> --file=~/dotfiles/Brewfile
+```
+
+Use `--cask` or `--vscode` when appropriate. Confirm the resulting diff before committing.
+
+## Reset and recovery
+
+For a broken local configuration, inspect the repository and restore a tracked file deliberately:
+
+```bash
+cd ~/dotfiles
+git status
+git restore home/.zshrc  # example: discard local edits to this one managed file
+exec zsh
+```
+
+For a clean rebuild on another Mac, repeat the **Set up a new Mac** steps. The backup directory created by `bootstrap.sh` is the recovery path for files that existed before this repository took control of them.
+
+## Secrets and machine-specific state
+
+Never commit API keys, credentials, private SSH keys, browser profiles, databases, or `.env` files. Keep secrets in the appropriate local credential manager or environment injection mechanism; do not put them in `home/.zshrc`.
+
+NVM’s downloaded Node versions live in `~/.nvm`; pyenv’s installed Python versions live under `~/.pyenv`. They are intentionally machine-local and are restored by installing versions as needed, not by committing those directories.
+
+## Repository layout
+
+```text
 dotfiles/
-├── home/        # Files that belong in ~
-├── config/      # ~/.config apps
-├── Brewfile
-├── bootstrap.sh
+├── home/                 # symlinked into $HOME
+├── config/               # symlinked into ~/.config
+├── Brewfile              # Homebrew and VS Code manifest
+├── bootstrap.sh          # backups + symlink creation
+└── macos-defaults.sh     # optional macOS preferences
 ```
-
-Example:
-
-```
-home/.zshrc        -> ~/.zshrc
-config/ghostty     -> ~/.config/ghostty
-```
-
----
-
-# Secrets
-
-Never commit:
-
-- `.ssh` private keys
-- API tokens
-- `.env` files
-- credentials
-
-Use local overrides if needed.
-
----
-
-# Customization
-
-Machine-specific tweaks should NOT be committed.
-
-Use:
-
-```
-*.local
-```
-
-files when necessary.
-
----
-
-# Philosophy on Tools
-
-Prefer:
-
-- fast
-- native
-- minimal dependencies
-
-Avoid heavy frameworks unless they provide clear operational value.
-
----
-
-# Maintenance Rule
-
-Whenever the environment changes in a meaningful way:
-
-👉 update the repo immediately.
-
-Future-you is the primary consumer of this project.
-
----
-
-# Disaster Recovery
-
-If a machine dies:
-
-1. Install Homebrew  
-2. Clone repo  
-3. Run bootstrap  
-4. `brew bundle`  
-
-Done.
-
----
-
-# Future Improvements
-
-- Optional macOS defaults script
-- SSH config templating
-- Git config
-- per-machine overrides
-
----
-
-Built to eliminate setup friction.
